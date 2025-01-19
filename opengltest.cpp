@@ -10,7 +10,10 @@
 #include <gl/glew.h>
 //#include <gl/glfw.h>
 #include <GLFW/glfw3.h>
+#include <openxr/openxr.h>
+#include <openxr/openxr_platform.h>
 #include "readSouce.cpp"
+#include "XRmanager.h"
 //#include "setShader.cpp"
 
 
@@ -109,6 +112,14 @@ int main()
     {
         return -1;
     }
+
+    {//ゴーグル接続ができているかの確認
+        //CheckOpenXRisUsable();
+        CheckOpenXRSystem();
+        //CheckOpenXRVersion();
+       // CheckAppContainer();
+        //CheckRuntimeEnvironmentVariable();
+    }
         
     // プログラムオブジェクト作成
     GLint shader = makeShader(vertex_filename, fragment_filename, "pv", "fc");
@@ -151,7 +162,7 @@ int main()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);//ここまでデプスバッファの用意のやつ
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);//ここまでデプスバッファの用意
     //フレームバッファオブジェクト作成
     GLuint fbo = [] {GLuint t; glGenFramebuffers(1, &t); return t; }();
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -182,7 +193,7 @@ int main()
 
     //================================================================================
 
-    //----------------フレームへの書き込み（なはず）-------------------------------
+    //----------------フレームへの書き込み-------------------------------
     GLint bufferprogram = makeShader(vertex_filename, "Buffer.frag", "pv", "fc");
         glClear(GL_COLOR_BUFFER_BIT);
         //shadre program start
@@ -214,7 +225,6 @@ int main()
     float now, sleeptime, prev = 0.0,speed=0.001;
     while (glfwWindowShouldClose(window) == GL_FALSE)
     {
-        
         
      
         now = glfwGetTime();
